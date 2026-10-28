@@ -1,0 +1,33 @@
+Python 3.12.14
+Comando: python ejecutar_practicas.py --output-dir ejecucion_verificada
+
+ARCHIVO: 01_dml.sql
+SELECT nombre, ventas_totales FROM vendedores WHERE zona = 'Norte' ORDER BY id; => [('Ana', 9000.0), ('Carla', 12000.0)]
+SELECT id, ventas_totales FROM vendedores WHERE id = 2; => [(2, 9800.0)]
+SELECT id, ventas_totales FROM vendedores WHERE id = 2; => [(2, 10300.0)]
+SELECT id, nombre, ventas_totales, zona FROM vendedores ORDER BY id; => [(1, 'Ana', 9000.0, 'Norte'), (2, 'Bruno', 10300.0, 'Internacional'), (3, 'Carla', 12000.0, 'Internacional'), (4, 'Diego', 4000.0, 'Este'), (5, 'Elena', 11000.0, 'Internacional'), (6, 'Fabian', 2000.0, 'Sur'), (7, 'Gabriela', 10000.0, 'Norte'), (99, 'Prueba', 0.0, 'Prueba')]
+SELECT * FROM vendedores WHERE id = 99; => [(99, 'Prueba', 0.0, 'Prueba', '2026-05-03')]
+SELECT * FROM vendedores WHERE id = 99; => []
+SELECT COUNT(*) AS vendedores_finales FROM vendedores; => [(7,)]
+
+ARCHIVO: 02_tcl_preparacion.sql
+
+ARCHIVO: 03_tcl_commit.sql
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 20), (2, 'Sensor - almacen B', 10)]
+SELECT * FROM ventas_log ORDER BY id; => []
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 17), (2, 'Sensor - almacen B', 10)]
+SELECT * FROM ventas_log ORDER BY id; => [(1, 1, 3, 'Venta confirmada')]
+Durabilidad verificada tras cerrar y reabrir la base.
+
+ARCHIVO: 04_tcl_rollback.sql
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 17), (2, 'Sensor - almacen B', 10)]
+SELECT * FROM productos ORDER BY id; => []
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 17), (2, 'Sensor - almacen B', 10)]
+
+ARCHIVO: 05_tcl_atomicidad.sql
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 17), (2, 'Sensor - almacen B', 10)]
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 12), (2, 'Sensor - almacen B', 10)]
+Error lógico esperado: NOT NULL constraint failed: productos.stock
+SELECT * FROM productos ORDER BY id; => [(1, 'Sensor - almacen A', 17), (2, 'Sensor - almacen B', 10)]
+
+VERIFICACION COMPLETA: DML y los tres casos TCL correctos.
